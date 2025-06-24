@@ -11,7 +11,10 @@ dotenv.config();
 
 const app = express();
 
-const CLIENT_URL = process.env.CLIENT_URL || "http://localhost:3000";
+const allowedOrigins = [
+  "http://localhost:3000",
+  "https://airbnb-five-topaz.vercel.app"
+];
 const PORT = process.env.PORT || 5000;
 const MONGO_URI = process.env.MONGO_URI;
 
@@ -21,7 +24,7 @@ if (!MONGO_URI) {
 }
 
 app.use(cors({
-  origin: CLIENT_URL,
+  origin: allowedOrigins,
   credentials: true,
 }));
 
@@ -31,7 +34,7 @@ app.use('/uploads', express.static('uploads'));
 app.use("/api/auth", authRoutes);
 app.use("/api/host", hostRoutes);
 app.use("/api/listings", listingRoutes);
-app.use("/api/bookings", bookingRoutes); // <--- Booking routes
+app.use("/api/bookings", bookingRoutes);
 
 mongoose.connect(MONGO_URI)
   .then(() => {
